@@ -6,8 +6,8 @@
  *
  */
  
-#ifndef CONNECTEDCOMPONENT_H
-#define CONNECTEDCOMPONENT_H
+#ifndef PGMIMAGEPROCESSOR_H
+#define PGMIMAGEPROCESSOR_H
 
 #include "ConnectedComponent.h"
 
@@ -15,7 +15,27 @@
 namespace ORRKAU001
 {
     //create Connected Component class
-    class ConnectedComponent
-    {};
+    class PGMimageProcessor
+    {
+        private:
+            std::shared_ptr<ConnectedComponent> component;
+            
+            //container to store the smart pointers to connected components
+            std::vector<std::weak_ptr<ConnectedComponent>> connectedComponentsContainer;
+        public:
+            PGMimageProcessor(); 
+            PGMimageProcessor();
+            ~PGMimageProcessor();
+
+            int extractComponents(unsigned char threshold, int minValidSize);
+            int filterComponentsBySize(int minSize, int maxSize);
+            bool writeComponents(const std::string & outFileName);
+            int getComponentCount(void) const;
+            int getLargestSize(void) const;
+            int getSmallestSize(void) const;
+            void printComponentData(const ConnectedComponent & theComponent) const;
+ 
+
+    };
 }
 #endif

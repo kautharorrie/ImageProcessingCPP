@@ -6,6 +6,7 @@ ORRKAU001::ConnectedComponent::ConnectedComponent()
     ORRKAU001::ConnectedComponent::setID(0);
 }
 
+
 //parametised constructor
 ORRKAU001::ConnectedComponent::ConnectedComponent(int i)
 {

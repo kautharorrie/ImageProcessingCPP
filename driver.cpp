@@ -56,9 +56,6 @@ int main(int argc, char *argv[])
 
         getline(file >> std::ws, fileType);
         std::cout << "---------------- type: " << fileType << std::endl;
-        
-        // getline(file >> std::ws, comments);
-        // std::cout << "---------------- type: " << comments << std::endl;
 
         getline(file >> std::ws, widthheight);
 

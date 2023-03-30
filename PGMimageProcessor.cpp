@@ -119,12 +119,15 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
         for (int y = 0; y < width; y++)
         {
             std::pair<int, int> p;
-            
+
+            std::shared_ptr<ConnectedComponent> c = std::make_shared<ConnectedComponent> ();
+
             if (values[x][y] > threshold)
             {
                 p.first = x;
                 p.second = y;
-                q.push(p);
+                q.push(p); //add to the queue
+                c -> addToVector(p); //add the component to the vector
                 values[x][y] = 0;
 
                 while(!q.empty())
@@ -143,6 +146,7 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
                         p.first = a-1;
                         p.second = b;
                         q.push(p);
+                        c -> addToVector(p); //add the component to the vector
                         values[a-1][b] = 0;
                         
                     }
@@ -151,6 +155,7 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
                         p.first = a;
                         p.second = b+1;
                         q.push(p);
+                        c -> addToVector(p); //add the component to the vector
                         values[a][b+1] = 0;
                     }
                     if (west > threshold)
@@ -158,6 +163,7 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
                         p.first = a;
                         p.second = b-1;
                         q.push(p);
+                        c -> addToVector(p); //add the component to the vector
                         values[a][b-1] = 0;
 
                     }
@@ -166,12 +172,21 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
                         p.first = a-1;
                         p.second = b;
                         q.push(p);
+                        c -> addToVector(p); //add the component to the vector
                         values[a-1][b] = 0;
                     }
 
                 }
                 
             }
+
+            if (c -> containerSize() > minValidSize)
+            {
+                std::weak_ptr weak = c;
+                ORRKAU001::PGMimageProcessor::connectedComponentsContainer.push_back(weak);
+            }
+            // std::weak_ptr weak = c;
+            // ORRKAU001::PGMimageProcessor::connectedComponentsContainer.push_back(weak);
         }
 
         //std::cout << std::endl;
@@ -217,7 +232,7 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
     delete[] mem;
     delete[] memblock;
 
-    return 0;
+    return ORRKAU001::PGMimageProcessor::connectedComponentsContainer.size();
 }
 
 /* iterate - with an iterator - though your container of connected

@@ -18,15 +18,16 @@ namespace ORRKAU001
     class PGMimageProcessor
     {
         private:
-            std::shared_ptr<ConnectedComponent> component;
+            //std::shared_ptr<ConnectedComponent> component;
             std::string filename;
-
-            //container to store the smart pointers to connected components
-            std::vector<std::weak_ptr<ConnectedComponent>> connectedComponentsContainer;
+            
         public:
             PGMimageProcessor(); 
             PGMimageProcessor(std::string filename);
             ~PGMimageProcessor();
+
+            //container to store the smart pointers to connected components
+            std::vector<std::weak_ptr<ConnectedComponent>> connectedComponentsContainer;
 
             void setFileName(std::string filename);
 

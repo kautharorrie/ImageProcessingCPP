@@ -53,6 +53,8 @@ namespace ORRKAU001
             //set number of pixels
             void setNumberOfPixels(void); 
 
+            int getID(void);
+
             //add to vector (container)
             void addToVector(std::pair<int,int> p);
 

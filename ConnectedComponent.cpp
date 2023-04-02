@@ -60,6 +60,11 @@ std::vector<std::pair<int, int>> ORRKAU001::ConnectedComponent::returnVector(voi
     return ORRKAU001::ConnectedComponent::components;
 }
 
+int ORRKAU001::ConnectedComponent::getID(void)
+{
+    return ORRKAU001::ConnectedComponent::ID;
+}
+
 
 
 

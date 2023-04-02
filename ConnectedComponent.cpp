@@ -55,6 +55,11 @@ void ORRKAU001::ConnectedComponent::addToVector(std::pair<int, int> p)
     ORRKAU001::ConnectedComponent::components.push_back(p);
 }
 
+std::vector<std::pair<int, int>> ORRKAU001::ConnectedComponent::returnVector(void)
+{
+    return ORRKAU001::ConnectedComponent::components;
+}
+
 
 
 

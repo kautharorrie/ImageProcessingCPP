@@ -56,6 +56,8 @@ namespace ORRKAU001
             //add to vector (container)
             void addToVector(std::pair<int,int> p);
 
+            std::vector<std::pair<int, int>> returnVector (void);
+
     };
 }
 

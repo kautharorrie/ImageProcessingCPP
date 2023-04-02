@@ -32,7 +32,7 @@ namespace ORRKAU001
             int height = 0;
             int width = 0;
             //container to store the smart pointers to connected components
-            std::vector<std::weak_ptr<ConnectedComponent>> connectedComponentsContainer;
+            std::vector<std::shared_ptr<ConnectedComponent>> connectedComponentsContainer;
 
             void setFileName(std::string filename);
 

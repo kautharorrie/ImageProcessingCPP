@@ -32,11 +32,13 @@ int ORRKAU001::PGMimageProcessor::getHeight(void)
 {
     return ORRKAU001::PGMimageProcessor::height;
 }
-//set height 
+
+//set width
 int ORRKAU001::PGMimageProcessor::getWidth(void)
 {
     return ORRKAU001::PGMimageProcessor::width;
 }
+
 // set the filename private variable ""
 void ORRKAU001::PGMimageProcessor::setFileName(std::string f)
 {
@@ -209,9 +211,9 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
             //only add the connected component to container of smart pointers if it is more than the minumm size
             if (c -> containerSize() > minValidSize)
             {
-                c -> setID (index);
-                std::weak_ptr weak = c; //create a weak pointer to avoid cycles in the code
-                ORRKAU001::PGMimageProcessor::connectedComponentsContainer.push_back(weak);
+                c -> setID (in); // set the ID of the component ... increment by 1
+                //std::weak_ptr weak = c; //create a weak pointer to avoid cycles in the code
+                ORRKAU001::PGMimageProcessor::connectedComponentsContainer.push_back(c);
             }
             in++;
         }
@@ -276,12 +278,14 @@ valid PGM. the return value indicates success of operation
 */
 bool ORRKAU001::PGMimageProcessor::writeComponents(const std::string & outFileName)
 {
-   
+   //get the width and height of the image
     int h = ORRKAU001::PGMimageProcessor::getHeight();
     int w = ORRKAU001::PGMimageProcessor::getWidth();
     
+    //create a 2D array to later use to write out the binary values
     unsigned char values[h][w];
 
+    //set all intial values of the array to zero
     for (int i = 0; i < h; i++)
     {
         for (int j = 0; j < w; j++)
@@ -290,7 +294,26 @@ bool ORRKAU001::PGMimageProcessor::writeComponents(const std::string & outFileNa
         }
     }
     //loop through the container to get each and every component
-    //take each component pixel coordinates and update the empty 2D array
+    for (int k = 0; k < ORRKAU001::PGMimageProcessor::connectedComponentsContainer.size(); k++)
+    {
+        std::shared_ptr<ConnectedComponent> c;
+
+        c = move(ORRKAU001::PGMimageProcessor::connectedComponentsContainer[k]);
+        std::vector<std::pair<int, int>> vec = c -> returnVector();
+        //std::vector<std::pair<int, int>> vec = c.returnVector();
+
+        for (int l = 0; l < vec.size(); l++)
+        {
+            std::pair <int, int> p;
+            p = vec[l];
+            int x = p.first;
+            int y = p.second;
+            //take each component pixel coordinates and update the empty 2D array
+            values[x][y] = 255;
+        }
+
+    }
+    
 
     //pass the 2D array into a char array (used for the file output)
 

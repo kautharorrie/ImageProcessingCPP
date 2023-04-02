@@ -100,6 +100,7 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
         getline(file >> std::ws, greyscale);
         std::cout << "---------------- type: " << greyscale << std::endl;
         
+        ORRKAU001::PGMimageProcessor::wh = widthheight;
         int g = widthheight.find(" ");
         std::string w = widthheight.substr(0, g);
         std::string h = widthheight.substr(g+1, widthheight.length());
@@ -140,13 +141,18 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
     }
 
     std::queue<std::pair<int, int>> q;
-
+    std::vector<std::vector<std::pair<int, int>>> container;
     int in = 0;
     for (int x = 0; x < height ; x++)
     {
+        //std::pair<int, int> p;
+//        std::vector<std::pair<int, int>> vec;
+
+       // std::shared_ptr<ConnectedComponent> c = std::make_shared<ConnectedComponent> ();
         for (int y = 0; y < width; y++)
         {
-            std::pair<int, int> p;
+                std::pair<int, int> p;
+            std::vector<std::pair<int, int>> vec;
 
             std::shared_ptr<ConnectedComponent> c = std::make_shared<ConnectedComponent> ();
 
@@ -156,6 +162,7 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
                 p.second = y;
                 q.push(p); //add to the queue
                 c -> addToVector(p); //add the component to the vector
+                vec.push_back(p);
                 values[x][y] = 0;
 
                 while(!q.empty())
@@ -175,6 +182,7 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
                         p.second = b;
                         q.push(p);
                         c -> addToVector(p); //add the component to the vector
+                        vec.push_back(p);
                         values[a-1][b] = 0;
                         
                     }
@@ -184,6 +192,7 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
                         p.second = b+1;
                         q.push(p);
                         c -> addToVector(p); //add the component to the vector
+                        vec.push_back(p);
                         values[a][b+1] = 0;
                     }
                     if (west > threshold)
@@ -192,6 +201,7 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
                         p.second = b-1;
                         q.push(p);
                         c -> addToVector(p); //add the component to the vector
+                        vec.push_back(p);
                         values[a][b-1] = 0;
 
                     }
@@ -201,25 +211,85 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
                         p.second = b;
                         q.push(p);
                         c -> addToVector(p); //add the component to the vector
+                        vec.push_back(p);
                         values[a-1][b] = 0;
                     }
 
                 }
+                //the queue is done here
+                container.push_back(vec);
+                //only add the connected component to container of smart pointers if it is more than the minumm size
+                if (c -> containerSize() > minValidSize)
+                {
+                    c -> setID (in); // set the ID of the component ... increment by 1
+                    //std::weak_ptr weak = c; //create a weak pointer to avoid cycles in the code
+                    ORRKAU001::PGMimageProcessor::connectedComponentsContainer.push_back(c);
+                    in++;
+                }
+                
                 
             }
-
-            //only add the connected component to container of smart pointers if it is more than the minumm size
-            if (c -> containerSize() > minValidSize)
-            {
-                c -> setID (in); // set the ID of the component ... increment by 1
-                //std::weak_ptr weak = c; //create a weak pointer to avoid cycles in the code
-                ORRKAU001::PGMimageProcessor::connectedComponentsContainer.push_back(c);
-            }
-            in++;
         }
+        
+            
+          
     }
 
         std::cout << "--------------------------" << std::endl;
+
+    ////////////////////////////////TESTER////////////////////
+    unsigned char tester[height][width]; 
+    for (int h = 0; h < height; h++)
+    {
+        for (int l = 0; l < width; l++)
+        {
+            tester[h][l] = 0;
+        }
+    }
+
+    for (int i = 0; i < container.size(); i++)
+    {
+        std::vector<std::pair<int, int>> vec = container[i];
+        for (int j = 0; j < vec.size(); j++)
+        {
+            std::pair<int, int> p = vec[j];
+            int x = p.first;
+            int y = p.second;
+            tester[x][y] = 255;
+        }
+    }
+    char * m;
+    m = new char [width*height];
+    int n = 0;
+    for (int i = 0; i < height; i++ )
+        {
+            for (int j = 0; j < width; j++ )
+            {
+                m[n] = tester[i][j];
+                n++;
+            }
+    }
+
+    std::cout << "--------------------------" << std::endl;
+
+    // std::ofstream Files("tester.pgm", std::ios::out|std::ios::binary);
+    // if (Files.is_open())
+    // {
+    //     //file.seekg (0, ios::beg); //get the first position
+    //     Files << fileType << std::endl;
+    //     Files << "# " << comments << std::endl;
+    //     Files << widthheight<< std::endl;;
+    //     Files << greyscale << std::endl;;
+    //     Files.write(m, blocksize);
+    //     Files.close();
+
+    // }
+    // else {std::cout << "Unable to open file" << std::endl;}
+
+    delete[] m;
+
+    
+    /////////////////////////////////////////////////////////
 
     mem = new char [width*height];
     int k = 0;
@@ -242,19 +312,19 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
 
     std::cout << "--------------------------" << std::endl;
 
-    std::ofstream File("image.pgm", std::ios::out|std::ios::binary);
-    if (File.is_open())
-    {
-        //file.seekg (0, ios::beg); //get the first position
-        File << fileType << std::endl;
-        File << "# " << comments << std::endl;
-        File << widthheight<< std::endl;;
-        File << greyscale << std::endl;;
-        File.write(mem, blocksize);
-        File.close();
+    // std::ofstream File("image.pgm", std::ios::out|std::ios::binary);
+    // if (File.is_open())
+    // {
+    //     //file.seekg (0, ios::beg); //get the first position
+    //     File << fileType << std::endl;
+    //     File << "# " << comments << std::endl;
+    //     File << widthheight<< std::endl;;
+    //     File << greyscale << std::endl;;
+    //     File.write(mem, blocksize);
+    //     File.close();
 
-    }
-    else {std::cout << "Unable to open file" << std::endl;}
+    // }
+    // else {std::cout << "Unable to open file" << std::endl;}
 
     delete[] mem;
     delete[] memblock;
@@ -296,12 +366,15 @@ bool ORRKAU001::PGMimageProcessor::writeComponents(const std::string & outFileNa
     //loop through the container to get each and every component
     for (int k = 0; k < ORRKAU001::PGMimageProcessor::connectedComponentsContainer.size(); k++)
     {
-        std::shared_ptr<ConnectedComponent> c;
+        std::shared_ptr<ConnectedComponent> c = std::make_shared<ConnectedComponent> ();
+        std::weak_ptr<ConnectedComponent> com = c;
 
         c = move(ORRKAU001::PGMimageProcessor::connectedComponentsContainer[k]);
         std::vector<std::pair<int, int>> vec = c -> returnVector();
         //std::vector<std::pair<int, int>> vec = c.returnVector();
 
+        //std::cout << "("<<c -> getID() << ", "<<vec.size() << ") ";
+        //std::cout <<vec.size() << " ";
         for (int l = 0; l < vec.size(); l++)
         {
             std::pair <int, int> p;
@@ -312,7 +385,48 @@ bool ORRKAU001::PGMimageProcessor::writeComponents(const std::string & outFileNa
             values[x][y] = 255;
         }
 
+       // std::cout << std::endl;
+
     }
+    //std::cout << std::endl;
+
+    char * mem;
+    int blocksize = ORRKAU001::PGMimageProcessor::height*ORRKAU001::PGMimageProcessor::width;
+    mem = new char [blocksize];
+    int k = 0;
+    for (int i = 0; i < ORRKAU001::PGMimageProcessor::height; i++ )
+        {
+            for (int j = 0; j < ORRKAU001::PGMimageProcessor::width; j++ )
+            {
+                if (values[i][j] == 255 )
+                {
+                    mem[k] = 255;
+                }
+                else{
+                    mem[k] = 0;
+                }
+            }
+    }
+
+    std::cout << "------------writing--------------" << std::endl;
+
+    std::ofstream File(outFileName, std::ios::out|std::ios::binary);
+    if (File.is_open())
+    {
+        //file.seekg (0, ios::beg); //get the first position
+        File << "P5" << std::endl;
+        File << "#  " << std::endl;
+        File << ORRKAU001::PGMimageProcessor::wh << std::endl;;
+        File << "255" << std::endl;;
+        File.write(mem, blocksize);
+        File.close();
+
+    }
+    else {std::cout << "Unable to open file" << std::endl;}
+
+    delete[] mem;
+    
+
     
 
     //pass the 2D array into a char array (used for the file output)

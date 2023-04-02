@@ -31,6 +31,7 @@ namespace ORRKAU001
 
             int height = 0;
             int width = 0;
+            std::string wh = ""; 
             //container to store the smart pointers to connected components
             std::vector<std::shared_ptr<ConnectedComponent>> connectedComponentsContainer;
 

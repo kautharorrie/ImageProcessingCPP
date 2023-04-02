@@ -15,6 +15,28 @@ ORRKAU001::PGMimageProcessor::~PGMimageProcessor()
 
 }
 
+//set height 
+void ORRKAU001::PGMimageProcessor::setHeight(int h)
+{
+    ORRKAU001::PGMimageProcessor::height = h;
+}
+//set width
+
+void ORRKAU001::PGMimageProcessor::setWidth(int w)
+{
+    ORRKAU001::PGMimageProcessor::width = w;
+}
+
+//set height 
+int ORRKAU001::PGMimageProcessor::getHeight(void)
+{
+    return ORRKAU001::PGMimageProcessor::height;
+}
+//set height 
+int ORRKAU001::PGMimageProcessor::getWidth(void)
+{
+    return ORRKAU001::PGMimageProcessor::width;
+}
 // set the filename private variable ""
 void ORRKAU001::PGMimageProcessor::setFileName(std::string f)
 {
@@ -39,8 +61,8 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
     std::string comments = "";
     std::string blank = "";
     std::string widthheight = "";
-    int width = 0 ;
-    int height = 0; 
+    width = 0 ;
+    height = 0; 
     std::string greyscale = "";
     int val = 0;
     int blocksize = 0;
@@ -53,7 +75,7 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
 
     char hash = '#';
     
-
+    
     //open the image in binary format
     std::ifstream file("chess.pgm", std::ios::in|std::ios::binary);
     if (file.is_open())
@@ -83,6 +105,9 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
         width = atoi(w.c_str());
         height = atoi(h.c_str());
         
+        ORRKAU001::PGMimageProcessor::setWidth(width);
+        ORRKAU001::PGMimageProcessor::setHeight(height);
+
         blocksize = width*height;
         //size = file.tellg();
         memblock = new char [blocksize];
@@ -114,6 +139,7 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
 
     std::queue<std::pair<int, int>> q;
 
+    int in = 0;
     for (int x = 0; x < height ; x++)
     {
         for (int y = 0; y < width; y++)
@@ -180,16 +206,15 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
                 
             }
 
+            //only add the connected component to container of smart pointers if it is more than the minumm size
             if (c -> containerSize() > minValidSize)
             {
-                std::weak_ptr weak = c;
+                c -> setID (index);
+                std::weak_ptr weak = c; //create a weak pointer to avoid cycles in the code
                 ORRKAU001::PGMimageProcessor::connectedComponentsContainer.push_back(weak);
             }
-            // std::weak_ptr weak = c;
-            // ORRKAU001::PGMimageProcessor::connectedComponentsContainer.push_back(weak);
+            in++;
         }
-
-        //std::cout << std::endl;
     }
 
         std::cout << "--------------------------" << std::endl;
@@ -249,8 +274,27 @@ int ORRKAU001::PGMimageProcessor::filterComponentsBySize(int minSize, int maxSiz
 (255=component pixel, 0 otherwise) and write this to outFileName as a
 valid PGM. the return value indicates success of operation
 */
-bool writeComponents(const std::string & outFileName)
+bool ORRKAU001::PGMimageProcessor::writeComponents(const std::string & outFileName)
 {
+   
+    int h = ORRKAU001::PGMimageProcessor::getHeight();
+    int w = ORRKAU001::PGMimageProcessor::getWidth();
+    
+    unsigned char values[h][w];
+
+    for (int i = 0; i < h; i++)
+    {
+        for (int j = 0; j < w; j++)
+        {
+            values[i][j] = 0;
+        }
+    }
+    //loop through the container to get each and every component
+    //take each component pixel coordinates and update the empty 2D array
+
+    //pass the 2D array into a char array (used for the file output)
+
+
     return true;
 }
 

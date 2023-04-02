@@ -20,12 +20,17 @@ namespace ORRKAU001
         private:
             //std::shared_ptr<ConnectedComponent> component;
             std::string filename;
-            
+
+            // int height;
+            // int width;
+
         public:
             PGMimageProcessor(); 
             PGMimageProcessor(std::string filename);
             ~PGMimageProcessor();
 
+            int height = 0;
+            int width = 0;
             //container to store the smart pointers to connected components
             std::vector<std::weak_ptr<ConnectedComponent>> connectedComponentsContainer;
 
@@ -38,6 +43,10 @@ namespace ORRKAU001
             int getLargestSize(void) const;
             int getSmallestSize(void) const;
             void printComponentData(const ConnectedComponent & theComponent) const;
+            void setHeight(int height);
+            void setWidth(int width);
+            int getWidth(void) ;
+            int getHeight(void) ;
             
  
 

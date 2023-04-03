@@ -369,7 +369,7 @@ bool ORRKAU001::PGMimageProcessor::writeComponents(const std::string & outFileNa
         std::shared_ptr<ConnectedComponent> c = std::make_shared<ConnectedComponent> ();
         std::weak_ptr<ConnectedComponent> com = c;
 
-        c = move(ORRKAU001::PGMimageProcessor::connectedComponentsContainer[k]);
+        c = ORRKAU001::PGMimageProcessor::connectedComponentsContainer[k];
         std::vector<std::pair<int, int>> vec = c -> returnVector();
         //std::vector<std::pair<int, int>> vec = c.returnVector();
 
@@ -422,7 +422,11 @@ bool ORRKAU001::PGMimageProcessor::writeComponents(const std::string & outFileNa
         File.close();
 
     }
-    else {std::cout << "Unable to open file" << std::endl;}
+    else 
+    {
+        std::cout << "Unable to open file" << std::endl;
+        return false;
+    }
 
     delete[] mem;
     
@@ -438,19 +442,60 @@ bool ORRKAU001::PGMimageProcessor::writeComponents(const std::string & outFileNa
 // return number of components
 int ORRKAU001::PGMimageProcessor::getComponentCount(void) const
 {
-    return 0;
+    return ORRKAU001::PGMimageProcessor::connectedComponentsContainer.size();
 }
 
 // return number of pixels in largest component
 int ORRKAU001::PGMimageProcessor::getLargestSize(void) const
 {
-    return 0;
+    int largest = 0;
+    std::vector<std::shared_ptr<ConnectedComponent>> ar = ORRKAU001::PGMimageProcessor::connectedComponentsContainer;
+    std::vector<std::shared_ptr<ConnectedComponent>>::iterator ptr;
+      
+    // Displaying vector elements using begin() and end()
+    std::shared_ptr<ConnectedComponent> com = std::make_shared<ConnectedComponent> ();
+    for (ptr = ar.begin(); ptr < ar.end(); ptr++){
+
+        com = *ptr;
+        int vec = com -> containerSize();
+
+        if (vec > largest)
+        {
+            largest = vec;
+        }
+    }
+
+
+    return largest;
 }
 
 // return number of pixels in smallest component
 int ORRKAU001::PGMimageProcessor::getSmallestSize(void) const
 {
-    return 0;
+    int smallest = 0;
+    
+    std::vector<std::shared_ptr<ConnectedComponent>> ar = ORRKAU001::PGMimageProcessor::connectedComponentsContainer;
+    std::vector<std::shared_ptr<ConnectedComponent>>::iterator ptr;
+      
+    // Displaying vector elements using begin() and end()
+    std::shared_ptr<ConnectedComponent> com = std::make_shared<ConnectedComponent> ();
+    for (ptr = ar.begin(); ptr < ar.end(); ptr++){
+
+        com = *ptr;
+        int vec = com -> containerSize();
+
+        if (smallest == 0)
+        {
+            smallest = vec;
+        }
+        else if (vec < smallest)
+        {
+            smallest = vec;
+        }
+    }
+
+    return smallest;
+    
 }
 
 /* print the data for a component to std::cout
@@ -459,5 +504,6 @@ print out to std::cout: component ID, number of pixels
 */
 void ORRKAU001::PGMimageProcessor::printComponentData(const ConnectedComponent & theComponent) const
 {
+    //int size = theComponent.getID();
     std::cout << "pgm image processor" << std::endl;
 }

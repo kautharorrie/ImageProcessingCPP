@@ -23,6 +23,7 @@
 #include <iomanip>
 #include <memory>
 #include <queue>
+#include <iterator>
 
 //declaring my namespace with my student number
 namespace ORRKAU001
@@ -43,6 +44,10 @@ namespace ORRKAU001
             ConnectedComponent(void); //constructor declaration
             ~ConnectedComponent(); //destructor declaration
             ConnectedComponent(int ID); //parametised constructor declaration
+            ConnectedComponent(const ConnectedComponent& oldCom); //copy constructor
+            ConnectedComponent(ConnectedComponent&& oldCom); //move constructor
+            ConnectedComponent& operator=(const ConnectedComponent& oldCom); //copy assignment
+            ConnectedComponent& operator=(const ConnectedComponent&& oldCom); //move assignment
 
             //method to set the ID of the connected components
             void setID(int i);

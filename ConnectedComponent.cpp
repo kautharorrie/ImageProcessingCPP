@@ -4,6 +4,7 @@
 ORRKAU001::ConnectedComponent::ConnectedComponent()
 {
     ORRKAU001::ConnectedComponent::setID(0);
+    ORRKAU001::ConnectedComponent::numberOfPixels = 0;
 }
 
 
@@ -11,6 +12,7 @@ ORRKAU001::ConnectedComponent::ConnectedComponent()
 ORRKAU001::ConnectedComponent::ConnectedComponent(int i)
 {
     ORRKAU001::ConnectedComponent::setID(i);
+    ORRKAU001::ConnectedComponent::numberOfPixels = 0;
 }
 
 //destructor
@@ -26,6 +28,74 @@ ORRKAU001::ConnectedComponent::~ConnectedComponent()
 void ORRKAU001::ConnectedComponent::setID(int id)
 {
     ORRKAU001::ConnectedComponent::ID = id;
+}
+//copy constructor
+ORRKAU001::ConnectedComponent::ConnectedComponent(const ConnectedComponent& oldCom) : numberOfPixels(oldCom.numberOfPixels), ID(oldCom.ID)
+{
+    for (int i = 0; i < ORRKAU001::ConnectedComponent::containerSize(); i++)
+    {
+        ORRKAU001::ConnectedComponent::components[i] = oldCom.components[i];
+    }
+}
+
+//move constructor
+ORRKAU001::ConnectedComponent::ConnectedComponent(ConnectedComponent&& oldCom) : numberOfPixels(oldCom.numberOfPixels), ID(oldCom.ID)
+{
+    //move data into current class
+    ORRKAU001::ConnectedComponent::components =std::move(oldCom.components);
+    
+    //set all old PGM class variables to null; 
+    oldCom.numberOfPixels = 0;
+    oldCom.ID = 0;
+    
+    //delete old 
+    for (int i = 0; i < oldCom.components.size(); i++)
+    {
+        oldCom.components[i].first = 0;
+        oldCom.components[i].second = 0;
+    }
+   
+
+}
+
+//copy assigment implementation
+ORRKAU001::ConnectedComponent& ORRKAU001::ConnectedComponent::operator=(const ORRKAU001::ConnectedComponent& oldCom)
+{
+    //ensure that the old class is not equal to the new 
+    if (this == &oldCom) {return *this;}
+
+    //copy all old class variables to new class
+    ID = oldCom.ID;
+    numberOfPixels = oldCom.numberOfPixels;
+    for (int i = 0; i < ORRKAU001::ConnectedComponent::components.size(); i++)
+    {
+        ORRKAU001::ConnectedComponent::components[i] = oldCom.components[i];
+    }
+    return *this;
+} 
+
+//move assignment implementation
+ORRKAU001::ConnectedComponent& ORRKAU001::ConnectedComponent::operator=(const ConnectedComponent&& oldCom)
+{
+    //move the vector into the new class vector
+    ORRKAU001::ConnectedComponent::components = std::move(oldCom.components);
+    ID = oldCom.ID;
+    numberOfPixels = oldCom.numberOfPixels;
+
+    //set all old PGM class variables to null; 
+    oldCom.ID == 0;
+    oldCom.numberOfPixels == 0;
+    //delete old 
+   
+    //delete old 
+    for (int i = 0; i < oldCom.components.size(); i++)
+    {
+        oldCom.components[i].first == 0;
+        oldCom.components[i].second == 0;
+    }
+
+    //return this class
+    return *this;
 }
 
 /**
@@ -44,7 +114,7 @@ void ORRKAU001::ConnectedComponent::setNumberOfPixels(void)
 int ORRKAU001::ConnectedComponent::containerSize(void)
 {
     ORRKAU001::ConnectedComponent::setNumberOfPixels();
-    return ORRKAU001::ConnectedComponent::numberOfPixels;
+    return ORRKAU001::ConnectedComponent::components.size();
 }
 
 /*

@@ -16,6 +16,16 @@ ORRKAU001::PGMimageProcessor::~PGMimageProcessor()
 
 }
 
+
+//copy constructor
+
+ORRKAU001::PGMimageProcessor::PGMimageProcessor(const PGMimageProcessor& oldPGM) : filename(oldPGM.filename)
+{
+    for (int i = 0; i < ORRKAU001::PGMimageProcessor::connectedComponentsContainer.size(); i++)
+    {
+        ORRKAU001::PGMimageProcessor::connectedComponentsContainer[i] = oldPGM.connectedComponentsContainer[i];
+    }
+}
 /*  process the input image to extract all the connected components,
     based on the supplied threshold (0...255) and excluding any components
     of less than the minValidSize. The final number of components that

@@ -10,39 +10,10 @@ ORRKAU001::PGMimageProcessor::PGMimageProcessor()
 
 }
 
+// making use of smart pointers, destructor not necessary
 ORRKAU001::PGMimageProcessor::~PGMimageProcessor()
 {
 
-}
-
-//set height 
-void ORRKAU001::PGMimageProcessor::setHeight(int h)
-{
-    ORRKAU001::PGMimageProcessor::height = h;
-}
-//set width
-
-void ORRKAU001::PGMimageProcessor::setWidth(int w)
-{
-    ORRKAU001::PGMimageProcessor::width = w;
-}
-
-//set height 
-int ORRKAU001::PGMimageProcessor::getHeight(void)
-{
-    return ORRKAU001::PGMimageProcessor::height;
-}
-
-//set width
-int ORRKAU001::PGMimageProcessor::getWidth(void)
-{
-    return ORRKAU001::PGMimageProcessor::width;
-}
-
-// set the filename private variable ""
-void ORRKAU001::PGMimageProcessor::setFileName(std::string f)
-{
-    ORRKAU001::PGMimageProcessor::filename = f;
 }
 
 /*  process the input image to extract all the connected components,
@@ -515,9 +486,40 @@ see ConnectedComponent class;
 print out to std::cout: component ID, number of pixels
 */
 void ORRKAU001::PGMimageProcessor::printComponentData(const ConnectedComponent & theComponent) const
+
 {
     ORRKAU001::ConnectedComponent com = theComponent;
     int id = com.getID();
     int numOfPixels = com.containerSize();
     std::cout << "The ID of component is: " << id << " and the number of pixels are: " << numOfPixels << std::endl;
+}
+
+//set height 
+void ORRKAU001::PGMimageProcessor::setHeight(int h)
+{
+    ORRKAU001::PGMimageProcessor::height = h;
+}
+//set width
+
+void ORRKAU001::PGMimageProcessor::setWidth(int w)
+{
+    ORRKAU001::PGMimageProcessor::width = w;
+}
+
+//set height 
+int ORRKAU001::PGMimageProcessor::getHeight(void)
+{
+    return ORRKAU001::PGMimageProcessor::height;
+}
+
+//set width
+int ORRKAU001::PGMimageProcessor::getWidth(void)
+{
+    return ORRKAU001::PGMimageProcessor::width;
+}
+
+// set the filename private variable ""
+void ORRKAU001::PGMimageProcessor::setFileName(std::string f)
+{
+    ORRKAU001::PGMimageProcessor::filename = f;
 }

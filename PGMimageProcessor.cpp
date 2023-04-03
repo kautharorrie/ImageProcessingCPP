@@ -339,7 +339,22 @@ after this operation should be returned.
 */
 int ORRKAU001::PGMimageProcessor::filterComponentsBySize(int minSize, int maxSize)
 {
-    return 0;
+    //std::vector<std::shared_ptr<ConnectedComponent>> ar = ORRKAU001::PGMimageProcessor::connectedComponentsContainer;
+    std::vector<std::shared_ptr<ConnectedComponent>>::iterator ptr;
+      
+    // Displaying vector elements using begin() and end()
+    std::shared_ptr<ConnectedComponent> com = std::make_shared<ConnectedComponent> ();
+    for (ptr = ORRKAU001::PGMimageProcessor::connectedComponentsContainer.begin(); ptr < ORRKAU001::PGMimageProcessor::connectedComponentsContainer.end(); ptr++){
+        com = *ptr;
+        int size = com -> containerSize();
+        if (size < minSize || size > maxSize)
+        {
+            ORRKAU001::PGMimageProcessor::connectedComponentsContainer.erase(ptr); //remove the connected component from the vector
+        }
+    }
+
+    return ORRKAU001::PGMimageProcessor::connectedComponentsContainer.size();
+
 }
 
 /* create a new PGM file which contains all current components
@@ -455,17 +470,14 @@ int ORRKAU001::PGMimageProcessor::getLargestSize(void) const
     // Displaying vector elements using begin() and end()
     std::shared_ptr<ConnectedComponent> com = std::make_shared<ConnectedComponent> ();
     for (ptr = ar.begin(); ptr < ar.end(); ptr++){
-
         com = *ptr;
-        int vec = com -> containerSize();
+        int size = com -> containerSize();
 
-        if (vec > largest)
+        if (size > largest)
         {
-            largest = vec;
+            largest = size;
         }
     }
-
-
     return largest;
 }
 

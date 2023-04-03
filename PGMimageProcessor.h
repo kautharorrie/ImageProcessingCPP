@@ -18,12 +18,7 @@ namespace ORRKAU001
     class PGMimageProcessor
     {
         private:
-            //std::shared_ptr<ConnectedComponent> component;
             std::string filename;
-
-            // int height;
-            // int width;
-
         public:
             PGMimageProcessor(); 
             PGMimageProcessor(std::string filename);
@@ -53,6 +48,9 @@ namespace ORRKAU001
             int getWidth(void) ;
             int getHeight(void) ;
             void printAllComponentData(void);
+
+            //add to vector (container)
+            void addToVector(std::shared_ptr<ConnectedComponent> p);
             
  
 

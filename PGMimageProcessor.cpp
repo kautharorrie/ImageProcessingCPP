@@ -17,15 +17,66 @@ ORRKAU001::PGMimageProcessor::~PGMimageProcessor()
 }
 
 
-//copy constructor
-
+//copy constructor implementation
 ORRKAU001::PGMimageProcessor::PGMimageProcessor(const PGMimageProcessor& oldPGM) : filename(oldPGM.filename)
 {
+    //copy data from old PGM to new PGM
     for (int i = 0; i < ORRKAU001::PGMimageProcessor::connectedComponentsContainer.size(); i++)
     {
         ORRKAU001::PGMimageProcessor::connectedComponentsContainer[i] = oldPGM.connectedComponentsContainer[i];
     }
 }
+ //move constructor implementation
+ORRKAU001::PGMimageProcessor::PGMimageProcessor(PGMimageProcessor&& oldPGM) : filename(oldPGM.filename)
+{
+    //move data into current class
+    ORRKAU001::PGMimageProcessor::connectedComponentsContainer =std::move(oldPGM.connectedComponentsContainer);
+    filename = oldPGM.filename; //update the filename
+
+    //set all old PGM class variables to null; 
+    oldPGM.filename == "";
+    //delete old 
+    for (int i = 0; i < oldPGM.connectedComponentsContainer.size(); i++)
+    {
+        oldPGM.connectedComponentsContainer[i] == nullptr;
+    }
+}
+//copy assignment implementation
+ORRKAU001::PGMimageProcessor& ORRKAU001::PGMimageProcessor::operator=(const PGMimageProcessor& oldPGM)
+{
+    //ensure that the old class is not equal to the new 
+    if (this == &oldPGM) {return *this;}
+
+    //copy all old class variables to new class
+    filename = oldPGM.filename;
+    for (int i = 0; i < ORRKAU001::PGMimageProcessor::connectedComponentsContainer.size(); i++)
+    {
+        ORRKAU001::PGMimageProcessor::connectedComponentsContainer[i] = oldPGM.connectedComponentsContainer[i];
+    }
+    return *this;
+
+} 
+//move assignment implementation
+ORRKAU001::PGMimageProcessor& ORRKAU001::PGMimageProcessor::operator=(const PGMimageProcessor&& oldPGM)
+{
+    //move the vector into the new class vector
+    ORRKAU001::PGMimageProcessor::connectedComponentsContainer = std::move(oldPGM.connectedComponentsContainer);
+    filename = oldPGM.filename; // set new filename
+
+    //set all old PGM class variables to null; 
+    oldPGM.filename == "";
+    //delete old 
+    for (int i = 0; i < oldPGM.connectedComponentsContainer.size(); i++)
+    {
+        oldPGM.connectedComponentsContainer[i] == nullptr;
+    }
+
+    //return this class
+    return *this;
+
+}
+
+
 /*  process the input image to extract all the connected components,
     based on the supplied threshold (0...255) and excluding any components
     of less than the minValidSize. The final number of components that

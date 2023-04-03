@@ -29,6 +29,9 @@ namespace ORRKAU001
             PGMimageProcessor(std::string filename);
             ~PGMimageProcessor();
             PGMimageProcessor(const PGMimageProcessor& oldPGM); //copy constructor
+            PGMimageProcessor(PGMimageProcessor&& oldPGM); //move constructor
+            PGMimageProcessor& operator=(const PGMimageProcessor& oldPGM); //copy assignment
+            PGMimageProcessor& operator=(const PGMimageProcessor&& oldPGM); //move assignment
 
             int height = 0;
             int width = 0;

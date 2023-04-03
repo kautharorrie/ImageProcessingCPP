@@ -48,6 +48,7 @@ namespace ORRKAU001
             void setWidth(int width);
             int getWidth(void) ;
             int getHeight(void) ;
+            void printAllComponentData(void);
             
  
 

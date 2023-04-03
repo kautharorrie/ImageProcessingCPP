@@ -50,7 +50,7 @@ int ORRKAU001::PGMimageProcessor::extractComponents(unsigned char threshold, int
     
     
     //open the image in binary format
-    std::ifstream file("chess.pgm", std::ios::in|std::ios::binary);
+    std::ifstream file(ORRKAU001::PGMimageProcessor::filename, std::ios::in|std::ios::binary);
     if (file.is_open())
     {
 
@@ -492,6 +492,21 @@ void ORRKAU001::PGMimageProcessor::printComponentData(const ConnectedComponent &
     int id = com.getID();
     int numOfPixels = com.containerSize();
     std::cout << "The ID of component is: " << id << " and the number of pixels are: " << numOfPixels << std::endl;
+}
+
+
+void ORRKAU001::PGMimageProcessor::printAllComponentData()
+{
+    std::vector<std::shared_ptr<ConnectedComponent>> ar = ORRKAU001::PGMimageProcessor::connectedComponentsContainer;
+    std::vector<std::shared_ptr<ConnectedComponent>>::iterator ptr;
+      
+    // Displaying vector elements using begin() and end()
+    std::shared_ptr<ConnectedComponent> com = std::make_shared<ConnectedComponent> ();
+    for (ptr = ar.begin(); ptr < ar.end(); ptr++){
+        com = *ptr;
+        std::cout << "The ID of component is: " << com -> getID() << ". The number of pixels are: " << com -> containerSize() << std::endl;  
+    }
+
 }
 
 //set height 

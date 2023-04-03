@@ -516,6 +516,8 @@ print out to std::cout: component ID, number of pixels
 */
 void ORRKAU001::PGMimageProcessor::printComponentData(const ConnectedComponent & theComponent) const
 {
-    //int size = theComponent.getID();
-    std::cout << "pgm image processor" << std::endl;
+    ORRKAU001::ConnectedComponent com = theComponent;
+    int id = com.getID();
+    int numOfPixels = com.containerSize();
+    std::cout << "The ID of component is: " << id << " and the number of pixels are: " << numOfPixels << std::endl;
 }
